@@ -18,7 +18,7 @@ gi {
 
 light {
   type ibl
-  image "sky_small.hdr"
+  image "checker.hdr"
   center 0 -1 0
   up 0 0 1
   lock false
