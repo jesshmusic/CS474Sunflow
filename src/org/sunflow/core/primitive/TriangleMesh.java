@@ -1,8 +1,11 @@
 package org.sunflow.core.primitive;
 
+import java.awt.Point;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.Random;
 
 import org.sunflow.SunflowAPI;
 import org.sunflow.core.Instance;
@@ -10,9 +13,11 @@ import org.sunflow.core.IntersectionState;
 import org.sunflow.core.ParameterList;
 import org.sunflow.core.PrimitiveList;
 import org.sunflow.core.Ray;
+import org.sunflow.core.Shader;
 import org.sunflow.core.ShadingState;
 import org.sunflow.core.ParameterList.FloatParameter;
 import org.sunflow.core.ParameterList.InterpolationType;
+import org.sunflow.core.shader.SubsurfaceScatteringShader;
 import org.sunflow.math.BoundingBox;
 import org.sunflow.math.MathUtils;
 import org.sunflow.math.Matrix4;
@@ -30,6 +35,9 @@ public class TriangleMesh implements PrimitiveList {
     private FloatParameter normals;
     private FloatParameter uvs;
     private byte[] faceShaders;
+
+    // Sampling helper object
+    private Sampler samples;
 
     public static void setSmallTriangles(boolean smallTriangles) {
         if (smallTriangles)
@@ -109,14 +117,21 @@ public class TriangleMesh implements PrimitiveList {
                 this.faceShaders[i] = (byte) (v & 0xFF);
             }
         }
+        
         if (updatedTopology) {
             // create triangle acceleration structure
             init();
         }
+        
+        if(pl.getBoolean("providesSamples", false)) {
+        	float density = pl.getFloat("sampleDensity", 10f);
+        	samples = new Sampler(density);
+        }
+        
         return true;
     }
 
-    public float getPrimitiveBound(int primID, int i) {
+	public float getPrimitiveBound(int primID, int i) {
         int tri = 3 * primID;
         int a = 3 * triangles[tri + 0];
         int b = 3 * triangles[tri + 1];
@@ -317,6 +332,11 @@ public class TriangleMesh implements PrimitiveList {
         int shaderIndex = faceShaders == null ? 0 : (faceShaders[primID] & 0xFF);
         state.setShader(parent.getShader(shaderIndex));
         state.setModifier(parent.getModifier(shaderIndex));
+        
+        // Sets the geometry to be used in the subsurface scattering shader
+        Shader shader = state.getShader();
+        if(shader instanceof SubsurfaceScatteringShader)
+        	((SubsurfaceScatteringShader)shader).setMesh(this);
     }
 
     public void init() {
@@ -333,6 +353,10 @@ public class TriangleMesh implements PrimitiveList {
                 triaccel[i] = new WaldTriangle(this, i);
         }
     }
+    
+    private void generateSamplePoints() {
+		
+	}
 
     protected Point3 getPoint(int i) {
         i *= 3;
@@ -780,5 +804,123 @@ public class TriangleMesh implements PrimitiveList {
         public boolean update(ParameterList pl, SunflowAPI api) {
             return true;
         }
+    }
+
+    /**
+     * A class that wraps up the mesh sampling
+     * @author Adam
+     *
+     */
+    private class Sampler {
+        
+    	int numberOfSamples;
+        private Point3[] points;
+        private Vector3[] normals;
+        
+        /**
+         * Creates a sampler for the mesh; expects points and triangles to be filled out already
+         * @param density Given in units of samples / unit area
+         */
+        public Sampler(float density)
+        {
+        	
+        	float[] points = TriangleMesh.this.points;
+        	int[] triangles = TriangleMesh.this.triangles;
+        	
+        	// A PDF and CDF for each triangle proportional to area
+        	float[] trianglePDF = new float[triangles.length/3];
+        	float[] triangleCDF = new float[triangles.length/3 + 1];
+
+        	// Find the area of all triangles in the mesh
+        	float totalArea = 0;
+            for(int t=0; t<triangles.length; t+=3)
+            {
+            	int index0 = triangles[t + 0];
+                int index1 = triangles[t + 1];
+                int index2 = triangles[t + 2];
+                Point3 a = getPoint(index0);
+                Point3 b = getPoint(index1);
+                Point3 c = getPoint(index2);
+                Vector3 normal = Point3.normal(a, b, c);
+                
+                Vector3 ab = Point3.sub(b, a, new Vector3());
+                Vector3 ac = Point3.sub(c, a, new Vector3());
+                
+                // Use of cross product to get area of triangle
+                float area = (float) (0.5 * Math.sqrt(Math.pow(ab.y * ac.z - ab.z * ac.y, 2) + Math.pow(ab.z * ac.x - ab.x * ac.z, 2) + Math.pow(ab.x * ac.y - ab.y * ac.x, 2)));
+                trianglePDF[t/3] = area;
+                totalArea += area;
+            }
+            
+            // Normalize the PDF
+            for(int t=0; t<triangles.length/3; t++)
+            	trianglePDF[t] /= totalArea; 
+            
+            // Compute the CDF
+            triangleCDF[0] = 0f;
+            for(int t=0; t<triangles.length/3; t++)
+            	triangleCDF[t+1] = triangleCDF[t] + trianglePDF[t]; 
+            triangleCDF[0] = 1f;
+            
+            numberOfSamples = (int)(totalArea / density);
+            this.points = new Point3[numberOfSamples];
+            this.normals = new Vector3[numberOfSamples];
+            Random random = new Random();
+            
+            // Generate the random samples
+            for(int i=0; i<numberOfSamples; i++)
+            {
+            	float r1 = random.nextFloat();
+            	int t = Arrays.binarySearch(triangleCDF, r1);
+            	if(t < 0)
+            		t = -t - 2;
+            	
+            	int index0 = triangles[t + 0];
+                int index1 = triangles[t + 1];
+                int index2 = triangles[t + 2];
+                Point3 a = getPoint(index0);
+                Point3 b = getPoint(index1);
+                Point3 c = getPoint(index2);
+                
+                Vector3 normal = Point3.normal(a, b, c);
+                this.normals[i] = normal;
+                
+                // Uniform triangle sampling algorithm
+                // http://math.stackexchange.com/questions/18686/uniform-random-point-in-triangle
+                float r2 = random.nextFloat();
+                float r3 = random.nextFloat();
+                
+                // Weigh the coordinates
+                Point3 zero = new Point3();
+                Point3.blend(zero, a, (float)(1 - Math.sqrt(r2)), a);
+                Point3.blend(zero, b, (float)(Math.sqrt(r2) * (1 - r3)), b);
+                Point3.blend(zero, c, (float)(r3 * Math.sqrt(r2)), c);
+                
+                // Build the point
+                Point3 p = new Point3(a.x + b.x + c.x, a.y + b.y + c.y, a.z + b.z + c.z);
+                this.points[i] = p;
+            }
+        }
+        
+        public void sample(MeshSampler sampler) 
+        {
+        	for(int i=0; i<numberOfSamples; i++)
+            {
+            	sampler.sample(points[i], normals[i]);
+            }
+        }
+    }
+    
+    public interface MeshSampler {
+    	// Positions given in object space, need to transform to world
+    	// Use state.transformNormalObjectToWorld() and state.transformObjectToWorld()
+    	// Be sure to normalize normal after transform
+    	public void sample(Point3 position, Vector3 normal);
+    }
+    
+    public void sampleMesh(MeshSampler sampler)
+    {
+    	if(sampler != null)
+    		samples.sample(sampler);
     }
 }

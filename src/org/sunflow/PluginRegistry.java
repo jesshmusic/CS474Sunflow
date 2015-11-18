@@ -91,6 +91,8 @@ import org.sunflow.core.shader.PrimIDShader;
 import org.sunflow.core.shader.QuickGrayShader;
 import org.sunflow.core.shader.ShinyDiffuseShader;
 import org.sunflow.core.shader.SimpleShader;
+import org.sunflow.core.shader.SubsurfaceScatteringShader;
+import org.sunflow.core.shader.TestShader;
 import org.sunflow.core.shader.TexturedAmbientOcclusionShader;
 import org.sunflow.core.shader.TexturedDiffuseShader;
 import org.sunflow.core.shader.TexturedPhongShader;
@@ -186,6 +188,7 @@ public final class PluginRegistry {
         shaderPlugins.registerPlugin("uber", UberShader.class);
         shaderPlugins.registerPlugin("ward", AnisotropicWardShader.class);
         shaderPlugins.registerPlugin("wireframe", WireframeShader.class);
+        shaderPlugins.registerPlugin("sss", SubsurfaceScatteringShader.class);
 
         // textured shaders
         shaderPlugins.registerPlugin("textured_ambient_occlusion", TexturedAmbientOcclusionShader.class);
