@@ -6,13 +6,14 @@ image {
 
 camera {
   type pinhole
-  eye    -10.5945 -30.0581 10.967
-  target 0.0554193 0.00521195 5.38209
+  eye    0 -30 10
+  target 0 0 5
   up     0 0 1
   fov    60
   aspect 1.333333
 }
 
+/*
 light {
   type ibl
   image sky_small.hdr
@@ -20,6 +21,14 @@ light {
   up 0 0 1
   lock true
   samples 200
+}
+*/
+
+light {
+   type point
+   color { "sRGB nonlinear" 1.000 1.000 1.000 }
+   power 5000.0
+   p 1 4 3
 }
 
 shader {
@@ -36,49 +45,28 @@ object {
 }
 
 shader {
-  name Glass
-  type glass
-  eta 1.6
-  color 1 1 1
-}
-
-shader {
-  name Mirror
-  type mirror
-  refl 0.7 0.7 0.7
-}
-
-shader {
   name SSShader
   type sss
-}
-
-
-object {
-  shader Mirror
-  type sphere
-  c -13 0 5
-  r 3
 }
 
 object {
 	shader SSShader
 	transform {
-		scale 5 5 5
-		translate 6 -6 -3
+		scale 5 0.1 5
+		translate 0 0 2.5
 	}
 	type generic-mesh
 	name cube
-	sssampledensity 10.0
+	sssampledensity 100.0
 	points 8
-	  -1.991474 5.65753 2.91525
-	  -1.991474 7.077255 2.91525
-	  -1.991474 5.65753 1.495525
-	  -1.991474 7.077255 1.495525
-	  -0.571748 5.65753 2.91525
-	  -0.571748 7.077255 2.91525
-	  -0.571748 5.65753 1.495525
-	  -0.571748 7.077255 1.495525
+	  -1 -1 1
+	  -1 1 1
+	  -1 -1 -1
+	  -1 1 -1
+	  1 -1 1
+	  1 1 1
+	  1 -1 -1
+	  1 1 -1
 	triangles 12
 	  3 2 0
 	  7 6 2

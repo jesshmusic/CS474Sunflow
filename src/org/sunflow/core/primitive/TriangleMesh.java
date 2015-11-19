@@ -23,6 +23,7 @@ import org.sunflow.math.MathUtils;
 import org.sunflow.math.Matrix4;
 import org.sunflow.math.OrthoNormalBasis;
 import org.sunflow.math.Point3;
+import org.sunflow.math.QMC;
 import org.sunflow.math.Vector3;
 import org.sunflow.system.UI;
 import org.sunflow.system.UI.Module;
@@ -354,10 +355,6 @@ public class TriangleMesh implements PrimitiveList {
         }
     }
     
-    private void generateSamplePoints() {
-		
-	}
-
     protected Point3 getPoint(int i) {
         i *= 3;
         return new Point3(points[i], points[i + 1], points[i + 2]);
@@ -859,13 +856,15 @@ public class TriangleMesh implements PrimitiveList {
             triangleCDF[0] = 0f;
             for(int t=0; t<triangles.length/3; t++)
             	triangleCDF[t+1] = triangleCDF[t] + trianglePDF[t]; 
-            triangleCDF[0] = 1f;
+            triangleCDF[triangles.length/3] = 1f;
             
             numberOfSamples = (int)(totalArea * density);
             areaPerSample = totalArea / numberOfSamples;
             this.points = new Point3[numberOfSamples];
             this.normals = new Vector3[numberOfSamples];
-            Random random = new Random();
+            
+            // Static seed for reproducibility
+            Random random = new Random(983475893L);
             
             // Generate the random samples
             for(int i=0; i<numberOfSamples; i++)
@@ -874,11 +873,11 @@ public class TriangleMesh implements PrimitiveList {
             	int t = Arrays.binarySearch(triangleCDF, r1);
             	if(t < 0)
             		t = -t - 2;
-            	t = MathUtils.clamp(t, 0, triangles.length-1);
+            	t = MathUtils.clamp(t, -1, triangles.length-1);
             	
-            	int index0 = triangles[t + 0];
-                int index1 = triangles[t + 1];
-                int index2 = triangles[t + 2];
+            	int index0 = triangles[t*3 + 0];
+                int index1 = triangles[t*3 + 1];
+                int index2 = triangles[t*3 + 2];
                 Point3 a = getPoint(index0);
                 Point3 b = getPoint(index1);
                 Point3 c = getPoint(index2);
