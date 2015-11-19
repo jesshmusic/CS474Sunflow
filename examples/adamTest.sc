@@ -63,8 +63,13 @@ object {
 
 object {
 	shader SSShader
+	transform {
+		scale 5 5 5
+		translate 6 -6 -3
+	}
 	type generic-mesh
 	name cube
+	sssampledensity 10.0
 	points 8
 	  -1.991474 5.65753 2.91525
 	  -1.991474 7.077255 2.91525

@@ -122,9 +122,9 @@ public class TriangleMesh implements PrimitiveList {
             // create triangle acceleration structure
             init();
         }
-        
-        if(pl.getBoolean("providesSamples", false)) {
-        	float density = pl.getFloat("sampleDensity", 10f);
+
+        float density = pl.getFloat("sssampledensity", -1f);
+        if(density > 0) {
         	samples = new Sampler(density);
         }
         
@@ -809,13 +809,13 @@ public class TriangleMesh implements PrimitiveList {
     /**
      * A class that wraps up the mesh sampling
      * @author Adam
-     *
      */
-    private class Sampler {
-        
-    	int numberOfSamples;
-        private Point3[] points;
-        private Vector3[] normals;
+    private class Sampler 
+    {
+    	final int numberOfSamples;
+    	final float areaPerSample;
+        final Point3[] points;
+        final Vector3[] normals;
         
         /**
          * Creates a sampler for the mesh; expects points and triangles to be filled out already
@@ -823,14 +823,13 @@ public class TriangleMesh implements PrimitiveList {
          */
         public Sampler(float density)
         {
-        	
         	float[] points = TriangleMesh.this.points;
         	int[] triangles = TriangleMesh.this.triangles;
         	
         	// A PDF and CDF for each triangle proportional to area
         	float[] trianglePDF = new float[triangles.length/3];
         	float[] triangleCDF = new float[triangles.length/3 + 1];
-
+        	
         	// Find the area of all triangles in the mesh
         	float totalArea = 0;
             for(int t=0; t<triangles.length; t+=3)
@@ -862,7 +861,8 @@ public class TriangleMesh implements PrimitiveList {
             	triangleCDF[t+1] = triangleCDF[t] + trianglePDF[t]; 
             triangleCDF[0] = 1f;
             
-            numberOfSamples = (int)(totalArea / density);
+            numberOfSamples = (int)(totalArea * density);
+            areaPerSample = totalArea / numberOfSamples;
             this.points = new Point3[numberOfSamples];
             this.normals = new Vector3[numberOfSamples];
             Random random = new Random();
@@ -874,6 +874,7 @@ public class TriangleMesh implements PrimitiveList {
             	int t = Arrays.binarySearch(triangleCDF, r1);
             	if(t < 0)
             		t = -t - 2;
+            	t = MathUtils.clamp(t, 0, triangles.length-1);
             	
             	int index0 = triangles[t + 0];
                 int index1 = triangles[t + 1];
@@ -906,16 +907,21 @@ public class TriangleMesh implements PrimitiveList {
         {
         	for(int i=0; i<numberOfSamples; i++)
             {
-            	sampler.sample(points[i], normals[i]);
+            	sampler.sample(points[i], normals[i], areaPerSample);
             }
         }
     }
     
     public interface MeshSampler {
-    	// Positions given in object space, need to transform to world
-    	// Use state.transformNormalObjectToWorld() and state.transformObjectToWorld()
-    	// Be sure to normalize normal after transform
-    	public void sample(Point3 position, Vector3 normal);
+    	/**
+    	 *  Positions given in object space, need to transform to world
+    	 *  Use state.transformNormalObjectToWorld() and state.transformObjectToWorld()
+    	 *  Be sure to normalize normal after transform
+    	 * @param position
+    	 * @param normal
+    	 * @param area
+    	 */
+    	public void sample(Point3 position, Vector3 normal, float area);
     }
     
     public void sampleMesh(MeshSampler sampler)
