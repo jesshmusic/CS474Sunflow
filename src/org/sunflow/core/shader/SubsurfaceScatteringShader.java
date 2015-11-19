@@ -76,22 +76,25 @@ public class SubsurfaceScatteringShader implements Shader
 				float alphaPrime = sigmaSprime / sigmaTprime;
 				float dv = 0;
 				{
+					zv /= 1000; // Convert to m
 					Point3 v = new Point3(position);
 					v.x += normal.x * zv;
 					v.y += normal.y * zv;
 					v.z += normal.z * zv;
-					dv = distance(hitPoint, v);
 					dv = (float)Math.sqrt(r * r + zv * zv);
-					
+					zv *= 1000; // Revert to mm
+					dv /= 1000; // Convert to mm
 				}
 				float dr = 0;
 				{
+					zr /= 1000; // Convert to mm
 					Point3 rp = new Point3(position);
-					rp.x -= normal.x * zr;
+					rp.x -= normal.x * zr ;
 					rp.y -= normal.y * zr;
 					rp.z -= normal.z * zr;
-					dr = distance(hitPoint, rp);
 					dr = (float)Math.sqrt(r * r + zr * zr);
+					zr *= 1000; // Revert to mm
+					dr /= 1000; // Convert to mm
 				}
 				
 				float scale = 0;
