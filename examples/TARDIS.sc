@@ -21,17 +21,16 @@ light {
   image "checker.hdr"
   center 0 -1 0
   up 0 0 1
-  lock false
-  samples 16
+  lock true
+  samples 200
 }
-
 
 camera {
   type thinlens
   eye    -15 16 -50
-  target -2 4 0
+  target -2 6 0
   up     0 1 0
-  fov 20
+  fov 15
   aspect 1
   fdist 55
   lensr 0.2
@@ -265,7 +264,8 @@ shader {
 object {
 	shader TARDISWhiteSign.shader
 	transform {
-		translate 2.5 0.0 -4.5
+		translate 0.0 -12.75 -4.4
+		rotatez 180.0
 	}
 	type generic-mesh
 	name Police_Box_White_Sign_Cube.003
@@ -358,6 +358,7 @@ object {
 object {
 	shader TARDISWindow.shader
 	transform {
+		translate 0.11 0.0 0.0
 		rotatex -90
 		rotatey 180
 	}
