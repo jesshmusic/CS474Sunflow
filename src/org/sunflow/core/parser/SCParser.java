@@ -15,6 +15,7 @@ import org.sunflow.SunflowAPI;
 import org.sunflow.SunflowAPIInterface;
 import org.sunflow.core.SceneParser;
 import org.sunflow.core.light.ImageBasedLight2;
+import org.sunflow.core.shader.TestShader;
 import org.sunflow.image.Color;
 import org.sunflow.image.ColorFactory;
 import org.sunflow.image.ColorFactory.ColorSpecificationException;
@@ -599,6 +600,8 @@ public class SCParser implements SceneParser {
             if (p.peekNextToken("samples"))
                 api.parameter("samples", p.getNextInt());
             api.shader(name, "uber");
+        } else if(p.peekNextToken("sss")) {
+        	api.shader(name, "sss");
         } else
             UI.printWarning(Module.API, "Unrecognized shader type: %s", p.getNextToken());
         p.checkNextToken("}");
@@ -803,6 +806,10 @@ public class SCParser implements SceneParser {
             api.geometry(name, "plane");
         } else if (type.equals("generic-mesh")) {
             UI.printInfo(Module.API, "Reading generic mesh: %s ... ", name);
+            
+            if(p.peekNextToken("sssampledensity"))
+            	api.parameter("sssampledensity", p.getNextFloat());
+            
             // parse vertices
             p.checkNextToken("points");
             int np = p.getNextInt();
