@@ -163,6 +163,27 @@ public class TriangleMesh implements PrimitiveList {
         }
         return bounds;
     }
+    
+    
+    public void getIntersectionPoint(ShadingState state, float u, float v, int primID, Point3 p)
+    {
+        float w = 1 - u - v;
+
+        int tri = 3 * primID;
+        int index0 = triangles[tri + 0];
+        int index1 = triangles[tri + 1];
+        int index2 = triangles[tri + 2];
+        Point3 v0p = getPoint(index0);
+        Point3 v1p = getPoint(index1);
+        Point3 v2p = getPoint(index2);
+
+        // get object space point from barycentric coordinates
+        p.x = w * v0p.x + u * v1p.x + v * v2p.x;
+        p.y = w * v0p.y + u * v1p.y + v * v2p.y;
+        p.z = w * v0p.z + u * v1p.z + v * v2p.z;
+        // move into world space
+        p.set(state.transformObjectToWorld(p));
+    }
 
     private final void intersectTriangleKensler(Ray r, int primID, IntersectionState state) {
         int tri = 3 * primID;
@@ -672,6 +693,7 @@ public class TriangleMesh implements PrimitiveList {
             }
         }
 
+
         public void prepareShadingState(ShadingState state) {
             state.init();
             Instance parent = state.getInstance();
@@ -863,8 +885,7 @@ public class TriangleMesh implements PrimitiveList {
             this.points = new Point3[numberOfSamples];
             this.normals = new Vector3[numberOfSamples];
             
-            // Static seed for reproducibility
-            Random random = new Random(983475893L);
+            Random random = new Random();
             
             // Generate the random samples
             for(int i=0; i<numberOfSamples; i++)

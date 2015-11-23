@@ -6,7 +6,7 @@ image {
 
 camera {
   type pinhole
-  eye    0 -30 10
+  eye    -20 -5 10
   target 0 0 5
   up     0 0 1
   fov    60
@@ -31,6 +31,17 @@ light {
    p 1 4 3
 }
 
+gi {
+  type path
+  samples 128
+}
+
+trace-depths {
+  diff 2
+  refl 4
+  refr 4
+}
+
 shader {
   name default-shader
   type diffuse
@@ -52,12 +63,12 @@ shader {
 object {
 	shader SSShader
 	transform {
-		scale 5 0.1 5
+		scale 5 1 5
 		translate 0 0 2.5
 	}
 	type generic-mesh
 	name cube
-	sssampledensity 100.0
+	sssampledensity 25.0
 	points 8
 	  -1 -1 1
 	  -1 1 1
