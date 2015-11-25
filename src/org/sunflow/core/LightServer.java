@@ -326,10 +326,12 @@ class LightServer {
         IntersectionState istate = previous.getIntersectionState();
         istate.numRefractionRays++;
         scene.trace(r, istate);
-        PrimitiveList primitives = istate.instance.getGeometry().getPrimitiveList();
-        if(primitives instanceof TriangleMesh)
-        	((TriangleMesh)primitives).getIntersectionPoint(previous, istate.u, istate.v, istate.id, intersection);
-        
+        if(istate.hit())
+    	{
+        	PrimitiveList primitives = istate.instance.getGeometry().getPrimitiveList();
+        	if(primitives instanceof TriangleMesh)
+        		((TriangleMesh)primitives).getIntersectionPoint(previous, istate.u, istate.v, istate.id, intersection);
+    	}
         return istate.hit() ? shadeHit(ShadingState.createRefractionBounceState(previous, r, i)) : Color.BLACK;
     }
     
