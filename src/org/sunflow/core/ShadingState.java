@@ -200,6 +200,12 @@ public final class ShadingState implements Iterable<LightSample> {
         p.z += bias * ng.z;
     }
 
+    public boolean checkBehind()
+    {
+		behind = r.dot(ng) > 0;
+    	return behind;
+    }
+    
     /**
      * Get x coordinate of the pixel being shaded.
      * 
@@ -657,6 +663,15 @@ public final class ShadingState implements Iterable<LightSample> {
     public final Color traceReflection(Ray r, int i) {
         return server.traceReflection(this, r, i);
     }
+    
+    public final Color traceRefraction(Ray r, int i, Point3 intersection)
+    {
+    	// this assumes the refraction ray is pointing away from the normal
+        r.ox -= 2 * bias * ng.x;
+        r.oy -= 2 * bias * ng.y;
+        r.oz -= 2 * bias * ng.z;
+        return server.traceRefraction(this, r, i, intersection);
+    }
 
     /**
      * Returns the color obtained by recursively tracing the specified ray.
@@ -843,7 +858,11 @@ public final class ShadingState implements Iterable<LightSample> {
         if (diff.isBlack())
             return lr;
         for (LightSample sample : this)
-            lr.madd(sample.dot(n), sample.getDiffuseRadiance());
+        {
+        	float dot = sample.dot(n); 
+        	Color c = sample.getDiffuseRadiance();
+            lr.madd(dot, c);
+        }
         lr.add(getIrradiance(diff));
         return lr.mul(diff).mul(1.0f / (float) Math.PI);
     }

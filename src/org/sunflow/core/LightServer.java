@@ -1,6 +1,7 @@
 package org.sunflow.core;
 
 import org.sunflow.PluginRegistry;
+import org.sunflow.core.primitive.TriangleMesh;
 import org.sunflow.image.Color;
 import org.sunflow.math.Point3;
 import org.sunflow.math.QMC;
@@ -317,6 +318,23 @@ class LightServer {
         return istate.hit() ? shadeHit(ShadingState.createReflectionBounceState(previous, r, i)) : Color.BLACK;
     }
 
+    Color traceRefraction(ShadingState previous, Ray r, int i, Point3 intersection)
+    {
+        // limit path depth and disable caustic paths
+        if (previous.getRefractionDepth() >= maxRefractionDepth || previous.getDiffuseDepth() > 0)
+            return Color.BLACK;
+        IntersectionState istate = previous.getIntersectionState();
+        istate.numRefractionRays++;
+        scene.trace(r, istate);
+        if(istate.hit())
+    	{
+        	PrimitiveList primitives = istate.instance.getGeometry().getPrimitiveList();
+        	if(primitives instanceof TriangleMesh)
+        		((TriangleMesh)primitives).getIntersectionPoint(previous, istate.u, istate.v, istate.id, intersection);
+    	}
+        return istate.hit() ? shadeHit(ShadingState.createRefractionBounceState(previous, r, i)) : Color.BLACK;
+    }
+    
     Color traceRefraction(ShadingState previous, Ray r, int i) {
         // limit path depth and disable caustic paths
         if (previous.getRefractionDepth() >= maxRefractionDepth || previous.getDiffuseDepth() > 0)
