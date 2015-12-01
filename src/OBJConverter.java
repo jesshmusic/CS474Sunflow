@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +18,7 @@ public class OBJConverter {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			parseOBJ(args[0]);
+			parseOBJ(args[0], args[1]);
 		}
 
 	}
@@ -24,11 +26,55 @@ public class OBJConverter {
 	//	NOTE: All objects MUST be triangles!!!!
 	//			ALSO: The object should not have normals mapped.
 	//			In other words the faces should be of the form: "f v1/t1 v2/t2 v3/t3"
-	private static String parseOBJ(String filename) {
-		String objectString = "\n\nobject {\n";
+	private static void parseOBJ(String inputFilename, String outputFilename) {
+
+		String objectString = "";
         int lineNumber = 1;
         try {
-        	UI.printInfo(Module.GEOM, "OBJ - Reading geometry: \"%s\" ...", filename);
+        	File sceneFile = new File(outputFilename);
+        	if (!sceneFile.exists()) {
+        		sceneFile.createNewFile();
+        	}
+        	FileWriter fileWriter = new FileWriter(sceneFile.getAbsoluteFile());
+        	BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
+        	objectString = objectString + "image {\n";
+        	objectString = objectString + "  resolution 600 600\n";
+        	objectString = objectString + "  aa 0 1\n";
+        	objectString = objectString + "  samples 2\n";
+        	objectString = objectString + "  filter gaussian\n";
+        	objectString = objectString + "}\n\n";
+        	
+        	objectString = objectString + "trace-depths {\n";
+        	objectString = objectString + "  diff 1\n";
+        	objectString = objectString + "  refl 4\n";
+        	objectString = objectString + "  refr 4\n";
+        	objectString = objectString + "}\n\n";
+        	
+        	objectString = objectString + "gi {\n";
+        	objectString = objectString + "  type path\n";
+        	objectString = objectString + "  samples 4\n";
+        	objectString = objectString + "}\n\n";
+
+        	objectString = objectString + "camera {\n";
+        	objectString = objectString + "  type pinhole\n";
+        	objectString = objectString + "  eye    -20 -5 10\n";
+        	objectString = objectString + "  target 0 0 5\n";
+        	objectString = objectString + "  up     0 0 1\n";
+        	objectString = objectString + "  fov    60\n";
+        	objectString = objectString + "  aspect 1.333333\n";
+        	objectString = objectString + "}\n\n";
+
+
+        	objectString = objectString + "light {\n";
+        	objectString = objectString + "   type point\n";
+        	objectString = objectString + "   color { \"sRGB nonlinear\" 1.000 1.000 1.000 }\n";
+        	objectString = objectString + "   power 5000.0\n";
+        	objectString = objectString + "   p 1 4 3\n";
+        	objectString = objectString + "}\n\n";
+        	
+        	objectString = objectString + "\n\nobject {\n";
+        	
+        	UI.printInfo(Module.GEOM, "OBJ - Reading geometry: \"%s\" ...", inputFilename);
         	FloatArray verts = new FloatArray();
         	FloatArray vertTexs = new FloatArray();
         	IntArray vnXs = new IntArray();
@@ -49,7 +95,7 @@ public class OBJConverter {
         	String currentObjectName = "";
         	
         	//	Parse the obj file. Can't get UVs or normals yet.
-        	FileReader file = new FileReader(filename);
+        	FileReader file = new FileReader(inputFilename);
         	BufferedReader bf = new BufferedReader(file);
         	String line;
         	while ((line = bf.readLine()) != null) {
@@ -127,21 +173,22 @@ public class OBJConverter {
 			}
 //        	
         	objectString = objectString + "}";
-        	
+
+            bufferWriter.write(objectString);
+            bufferWriter.close();
         	System.out.println(objectString);
         	file.close();
             UI.printInfo(Module.GEOM, "OBJ -   * Creating mesh ...");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            UI.printError(Module.GEOM, "Unable to read mesh file \"%s\" - file not found", filename);
+            UI.printError(Module.GEOM, "Unable to read mesh file \"%s\" - file not found", inputFilename);
         } catch (NumberFormatException e) {
             e.printStackTrace();
             UI.printError(Module.GEOM, "Unable to read mesh file \"%s\" - syntax error at line %d", lineNumber);
         } catch (IOException e) {
             e.printStackTrace();
-            UI.printError(Module.GEOM, "Unable to read mesh file \"%s\" - I/O error occured", filename);
+            UI.printError(Module.GEOM, "Unable to read mesh file \"%s\" - I/O error occured", inputFilename);
         }
-		return objectString;
 	}
 }
 

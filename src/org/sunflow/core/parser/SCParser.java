@@ -15,7 +15,6 @@ import org.sunflow.SunflowAPI;
 import org.sunflow.SunflowAPIInterface;
 import org.sunflow.core.SceneParser;
 import org.sunflow.core.light.ImageBasedLight2;
-import org.sunflow.core.shader.TestShader;
 import org.sunflow.image.Color;
 import org.sunflow.image.ColorFactory;
 import org.sunflow.image.ColorFactory.ColorSpecificationException;
