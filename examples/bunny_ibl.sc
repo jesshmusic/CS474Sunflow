@@ -1,18 +1,20 @@
 image {
   resolution 640 480
   aa 0 1
+  samples 4
   filter mitchell
 }
 
 camera {
   type pinhole
-  eye    -10.5945 -30.0581 10.967
-  target 0.0554193 0.00521195 5.38209
+  eye    -7.5945 -20.0581 12.967
+  target 0.0554193 0.00521195 7.38209
   up     0 0 1
   fov    60
   aspect 1.333333
 }
 
+/*
 light {
   type ibl
   image sky_small.hdr
@@ -21,6 +23,21 @@ light {
   lock true
   samples 200
 }
+*/
+
+light {
+   type point
+   color { "sRGB nonlinear" 1.000 1.000 1.000 }
+   power 1500.0
+   p -10 -4 10
+}
+
+light {
+   type point
+   color { "sRGB nonlinear" 1.000 1.000 1.000 }
+   power 1000.0
+   p -2 3 14
+}
 
 shader {
   name default-shader
@@ -28,8 +45,24 @@ shader {
   diff 0.25 0.25 0.25
 }
 
+shader {
+  name SSShader
+  type sss
+  diff 0.25 0.25 0.75
+  samp 16
+  refl 0
+  attn 0.0625
+}
+
+shader {
+  name shinyGray
+  type shiny
+  diff 0.25 0.25 0.75
+  refl 0
+}
+
 object {
-  shader default-shader
+  shader SSShader
   type mesh
   name polySurfac
   32368 64524
@@ -96932,32 +96965,4 @@ object {
   type plane
   p 0 0 0
   n 0 0 1
-}
-
-shader {
-  name Glass
-  type glass
-  eta 1.6
-  color 1 1 1
-}
-
-shader {
-  name Mirror
-  type mirror
-  refl 0.7 0.7 0.7
-}
-
-object {
-  shader Glass
-  type sphere
-  c 12 0 5
-  r 3
-}
-
-
-object {
-  shader Mirror
-  type sphere
-  c -13 0 5
-  r 3
 }
