@@ -1,12 +1,13 @@
 image {
   resolution 640 480
   aa 0 1
+  samples 4
   filter mitchell
 }
 
 camera {
   type pinhole
-  eye    -20 -5 10
+  eye   15 -20 10
   target 0 0 5
   up     0 0 1
   fov    60
@@ -27,13 +28,15 @@ light {
 light {
    type point
    color { "sRGB nonlinear" 1.000 1.000 1.000 }
-   power 5000.0
-   p 1 4 3
+   power 1000.0
+   p 1 5 3
 }
 
-gi {
-  type path
-  samples 128
+light {
+   type point
+   color { "sRGB nonlinear" 1.000 1.000 1.000 }
+   power 1000.0
+   p 1 5 10
 }
 
 trace-depths {
@@ -48,6 +51,12 @@ shader {
   diff 0.25 0.25 0.25
 }
 
+shader {
+  name ball-shader
+  type diffuse
+  diff 1 0 0
+}
+
 object {
   shader default-shader
   type plane
@@ -56,19 +65,36 @@ object {
 }
 
 shader {
+  name bricks
+  type diffuse
+  texture textures/brick_color.jpg
+}
+
+shader {
   name SSShader
   type sss
+  diff 0.25 0.25 0.75
+  samp 16
+  refl 0
+  attn 0.5
+}
+
+modifier {
+	name myPerlin
+	type perlin
+	function 1
+	size 1
+	scale 1
 }
 
 object {
 	shader SSShader
 	transform {
-		scale 5 1 5
+		scale 5 0.25 5
 		translate 0 0 2.5
 	}
 	type generic-mesh
 	name cube
-	sssampledensity 25.0
 	points 8
 	  -1 -1 1
 	  -1 1 1
@@ -104,5 +130,25 @@ object {
 	  	0 0 1 0 0 1 0 0 1
 	  	0 -1 0 0 -1 0 0 -1 0
 	  	0 1 0 0 1 0 0 1 0
-	uvs none
+	uvs facevarying
+	  	1 0 1 1 0 1
+	  	1 0 1 1 0 1
+	  	1 0 1 1 0 1
+	  	0 0 0 0 1 0
+	  	1 0 1 1 0 1
+	  	1 0 1 1 0 1
+	  	0 0 1 0 0 1
+	  	0 0 1 0 0 1
+	  	0 0 1 0 0 1
+	  	1 0 0 0 1 0
+	  	0 0 1 0 0 1
+	  	0 0 1 0 0 1
 }
+
+object {
+  shader ball-shader
+  type sphere
+  c 2 3 2
+  r 2
+}
+

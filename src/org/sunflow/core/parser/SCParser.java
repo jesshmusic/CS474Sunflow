@@ -600,6 +600,16 @@ public class SCParser implements SceneParser {
                 api.parameter("samples", p.getNextInt());
             api.shader(name, "uber");
         } else if(p.peekNextToken("sss")) {
+        	if(p.peekNextToken("diff"))
+        		api.parameter("color", null, parseColor().getRGB());
+        	if(p.peekNextToken("text"))
+        		api.parameter("texture", p.getNextToken());
+        	if(p.peekNextToken("samp"))
+        		api.parameter("samples", p.getNextInt());
+        	if(p.peekNextToken("refl"))
+        		api.parameter("reflectance", p.getNextFloat());
+        	if(p.peekNextToken("attn"))
+        		api.parameter("attenuation", p.getNextFloat());
         	api.shader(name, "sss");
         } else
             UI.printWarning(Module.API, "Unrecognized shader type: %s", p.getNextToken());
@@ -805,9 +815,6 @@ public class SCParser implements SceneParser {
             api.geometry(name, "plane");
         } else if (type.equals("generic-mesh")) {
             UI.printInfo(Module.API, "Reading generic mesh: %s ... ", name);
-            
-            if(p.peekNextToken("sssampledensity"))
-            	api.parameter("sssampledensity", p.getNextFloat());
             
             // parse vertices
             p.checkNextToken("points");
