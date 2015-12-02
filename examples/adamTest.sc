@@ -7,7 +7,7 @@ image {
 
 camera {
   type pinhole
-  eye   -15 10 10
+  eye   15 -20 10
   target 0 0 5
   up     0 0 1
   fov    60
@@ -32,6 +32,13 @@ light {
    p 1 5 3
 }
 
+light {
+   type point
+   color { "sRGB nonlinear" 1.000 1.000 1.000 }
+   power 1000.0
+   p 1 5 10
+}
+
 trace-depths {
   diff 2
   refl 4
@@ -42,6 +49,12 @@ shader {
   name default-shader
   type diffuse
   diff 0.25 0.25 0.25
+}
+
+shader {
+  name ball-shader
+  type diffuse
+  diff 1 0 0
 }
 
 object {
@@ -60,9 +73,10 @@ shader {
 shader {
   name SSShader
   type sss
-  texture textures/brick_color.jpg
-  samples 64
-  attn 5
+  diff 0.25 0.25 0.75
+  samp 16
+  refl 0
+  attn 0.5
 }
 
 modifier {
@@ -76,12 +90,11 @@ modifier {
 object {
 	shader SSShader
 	transform {
-		scale 5 1 5
+		scale 5 0.25 5
 		translate 0 0 2.5
 	}
 	type generic-mesh
 	name cube
-	sssampledensity 25.0
 	points 8
 	  -1 -1 1
 	  -1 1 1
@@ -130,5 +143,12 @@ object {
 	  	1 0 0 0 1 0
 	  	0 0 1 0 0 1
 	  	0 0 1 0 0 1
+}
+
+object {
+  shader ball-shader
+  type sphere
+  c 2 3 2
+  r 2
 }
 

@@ -9,6 +9,7 @@ import org.sunflow.core.Texture;
 import org.sunflow.core.TextureCache;
 import org.sunflow.core.primitive.TriangleMesh;
 import org.sunflow.image.Color;
+import org.sunflow.math.MathUtils;
 import org.sunflow.math.Point3;
 import org.sunflow.math.Vector3;
 
@@ -19,22 +20,38 @@ import org.sunflow.math.Vector3;
  */
 public class SubsurfaceScatteringShader implements Shader
 {
-	private TriangleMesh mesh;
 	private Color diffuseColor = Color.white();
 	private Texture tex;
 	private int samples = 16;
+	
+	// How reflective the surface is
 	private float refl = 0.1f;
 	
 	// A value which affects how far light travels in the substance: bigger means it goes further
 	private float attenuation = 10f;
 	
+	// This is a 0-1 value controlling how much of the final color is plain diffuse
+	float percentDiffuse = 0.5f;
+	
+	// Controls how much light comes through as transparency 
+	private float transparencyPower = 5f;
+	
+	// Controls how focused the transparency looks
+	private float transparencyFocus = 5f;
+	
 	// Values needed for BSSRDF
 	private float eta = 1.3f;
-	
 	// These values are taken from the table in (1) and converted to m^-1
 	private float sigmaSprime = new Color(0.74f, 0.88f, 1.01f).getAverage() * 1000;
 	private float sigmaA = new Color(0.032f, 0.17f, 0.48f).getAverage() * 1000;
-
+	
+	// A thread value that controls whether recursive raytracing is for diffuse color or transparency
+	private static ThreadLocal<Boolean> transparency = new ThreadLocal<>();
+	
+	public SubsurfaceScatteringShader()
+	{
+		transparency.set(false);
+	}
 		
 	@Override
 	public boolean update(ParameterList pl, SunflowAPI api)
@@ -49,30 +66,37 @@ public class SubsurfaceScatteringShader implements Shader
 		return true;
 	}
 	
-	/**
-	 * Set the mesh to be used in subsurface shading
-	 * @param mesh
-	 */
-	public void setMesh(TriangleMesh mesh)
-	{
-		this.mesh = mesh;
-	}
-
-	
 	@Override
 	public Color getRadiance(ShadingState state)
 	{
-		// Base case, return diffuse 
+		// Base case, return diffuse or transparency
 		if(state.getDepth() > 0)
 		{
-			// This check prevents samples taken from behind from ending up as black
-			if(!state.checkBehind())
+			// Diffuse case
+			if(!transparency.get())
 			{
-				state.faceforward();
+				// This check prevents samples taken from behind from ending up as black
+				if(!state.checkBehind())
+				{
+					state.faceforward();
+				}
+				
+				state.initLightSamples();
+				return state.diffuse(getDiffuse(state));
 			}
-			
-			state.initLightSamples();
-			return state.diffuse(getDiffuse(state));
+			// Transparent case
+			else
+			{				
+				// This check prevents samples taken from behind from ending up as black
+				if(!state.checkBehind())
+				{
+					state.faceforward();
+				}
+				
+				Ray r = new Ray(state.getPoint(), state.getRay().getDirection());
+				Color c = state.traceReflection(r, 0); 
+				return c;
+			}
 		}
 		// Do SSS
 		else
@@ -104,16 +128,35 @@ public class SubsurfaceScatteringShader implements Shader
 					direction.y = (float)(Math.sin(theta) * Math.sin(phi));
 					direction.z = (float)Math.cos(theta);
 					
+					transparency.set(false);
 					Point3 p = new Point3();
-					Color c = state.traceRefraction(new Ray(originPoint, direction), i, p);
+					Ray sampleRay = new Ray(originPoint, direction);
+					Color c = state.traceRefraction(sampleRay, i, p);
 					Vector3 diff = Point3.sub(p, state.getPoint(), new Vector3());
 					float r = diff.length();
+					float scale = getScale(r);
 					
-					// float scale = getScaleBSSRDF(r);
-					float scale = getScaleSimple(r);
-					rad.madd(scale, c);
+					// Add in transparency term
+					if(transparencyPower > 0)
+					{
+						transparency.set(true);
+						Vector3 rayDir = state.getRay().getDirection();
+						float dot = Vector3.dot(direction, rayDir) / (rayDir.length()*direction.length());
+						float percentTransparency = MathUtils.clamp(dot, 0, 1);
+						percentTransparency = (float)Math.pow(percentTransparency, transparencyFocus) * transparencyPower;
+						
+						// Give transparency a double helping of scale so it does not dominate scattering
+						percentTransparency *= scale;
+						
+						Color t = state.traceRefraction(sampleRay, i);
+						t.mul(percentTransparency);
+						c.add(t);
+					}
+					
+					c.mul(scale);
+					rad.add(c);
 				}
-			}
+			}			
 			
 			// Average out sample contributions
 			rad.mul(1f/(n*n));
@@ -142,7 +185,20 @@ public class SubsurfaceScatteringShader implements Shader
 		        
 		        rad.add(ret.mul(state.traceReflection(refRay, 0)));
 			}
-
+			
+			// Take a ratio of the normal diffuse to the SSS color. This helps prevent overall darkening.
+			{
+				state.initLightSamples();
+				Color c = state.diffuse(getDiffuse(state));
+				c.mul(percentDiffuse);
+				Color d = rad.copy();
+				d.mul(1 - percentDiffuse);
+				d.add(c);
+				
+				// Take the SSS if it's brighter to get it showing in dark patches
+				rad = Color.max(rad, d);
+			}
+			
 			return rad;
 		}
 	}
@@ -150,6 +206,12 @@ public class SubsurfaceScatteringShader implements Shader
 	private Color getDiffuse(ShadingState state)
 	{
 		return tex != null ? tex.getPixel(state.getUV().x, state.getUV().y) : diffuseColor;
+	}
+	
+	// Put the desired scale algorithm here
+	private float getScale(float r)
+	{
+		return getScaleSimple(r);
 	}
 	
 	private float getScaleSimple(float r)
@@ -178,6 +240,7 @@ public class SubsurfaceScatteringShader implements Shader
 		scale /= (float)Math.PI;
 		return scale;
 	}
+	
 	@Override
 	public void scatterPhoton(ShadingState state, Color power) { }
 }

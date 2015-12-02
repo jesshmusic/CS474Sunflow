@@ -14,7 +14,6 @@ camera {
   aspect 1.333333
 }
 
-/*
 light {
   type ibl
   image sky_small.hdr
@@ -23,8 +22,8 @@ light {
   lock true
   samples 200
 }
-*/
 
+/*
 light {
    type point
    color { "sRGB nonlinear" 1.000 1.000 1.000 }
@@ -38,6 +37,7 @@ light {
    power 1000.0
    p -2 3 14
 }
+*/
 
 shader {
   name default-shader
@@ -51,7 +51,7 @@ shader {
   diff 0.25 0.25 0.75
   samp 16
   refl 0
-  attn 0.0625
+  attn 1
 }
 
 shader {

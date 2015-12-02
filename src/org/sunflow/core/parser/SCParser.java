@@ -816,9 +816,6 @@ public class SCParser implements SceneParser {
         } else if (type.equals("generic-mesh")) {
             UI.printInfo(Module.API, "Reading generic mesh: %s ... ", name);
             
-            if(p.peekNextToken("sssampledensity"))
-            	api.parameter("sssampledensity", p.getNextFloat());
-            
             // parse vertices
             p.checkNextToken("points");
             int np = p.getNextInt();

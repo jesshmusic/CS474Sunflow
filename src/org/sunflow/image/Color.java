@@ -367,4 +367,18 @@ public final class Color {
     public String toString() {
         return String.format("(%.3f, %.3f, %.3f)", r, g, b);
     }
+    
+    /**
+     * Get the component-wise maximum color 
+     * @param c1
+     * @param c2
+     * @return
+     */
+    public static Color max(Color c1, Color c2)
+    {
+    	float r = Math.max(c1.r, c2.r);
+    	float g = Math.max(c1.g, c2.g);
+    	float b = Math.max(c1.b, c2.b);
+    	return new Color(r, g, b);
+    }
 }
