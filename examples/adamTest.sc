@@ -7,7 +7,7 @@ image {
 
 camera {
   type pinhole
-  eye   15 -20 10
+  eye   15 -15 10
   target 0 0 5
   up     0 0 1
   fov    60
@@ -76,7 +76,9 @@ shader {
   diff 0.25 0.25 0.75
   samp 16
   refl 0
-  attn 0.5
+  attn 2
+  tpow 5
+  tfoc 10
 }
 
 modifier {
@@ -90,8 +92,8 @@ modifier {
 object {
 	shader SSShader
 	transform {
-		scale 5 0.25 5
-		translate 0 0 2.5
+		scale 5 1 5
+		translate 0 -0.5 2.5
 	}
 	type generic-mesh
 	name cube
@@ -151,4 +153,3 @@ object {
   c 2 3 2
   r 2
 }
-
