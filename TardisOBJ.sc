@@ -77,7 +77,7 @@ shader {
 	text Cassandra_UV.jpg
 	samp 16
 	refl 0
-	attn 0.5
+	attn 1.0
 }
 
 /*
