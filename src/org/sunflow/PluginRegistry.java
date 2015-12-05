@@ -92,7 +92,7 @@ import org.sunflow.core.shader.QuickGrayShader;
 import org.sunflow.core.shader.ShinyDiffuseShader;
 import org.sunflow.core.shader.SimpleShader;
 import org.sunflow.core.shader.SubsurfaceScatteringShader;
-import org.sunflow.core.shader.TestShader;
+//import org.sunflow.core.shader.TestShader;
 import org.sunflow.core.shader.TexturedAmbientOcclusionShader;
 import org.sunflow.core.shader.TexturedDiffuseShader;
 import org.sunflow.core.shader.TexturedPhongShader;

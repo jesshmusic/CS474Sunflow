@@ -1,0 +1,80 @@
+# Blender MTL File: 'Cassandra.blend'
+# Material Count: 8
+
+newmtl Light
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Tardis-Police-Public-Call-Box-Text.jpg
+
+newmtl Material
+Ns 96.078431
+Ka 0.413223 0.413223 0.413223
+Kd 0.000000 0.000000 0.000000
+Ks 0.731405 0.731405 0.731405
+Ni 1.000000
+d 1.000000
+illum 3
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl Skin
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.546861 0.475128
+Ks 0.257812 0.257812 0.257812
+Ni 1.000000
+d 0.801653
+illum 2
+map_Kd cassandra_2739206k.jpg
+
+newmtl TardisBlue
+Ns 25.490196
+Ka 0.000000 0.000000 0.000000
+Kd 0.010824 0.036338 0.098503
+Ks 0.130769 0.130769 0.130769
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tardis-Police-Public-Call-Box-Text.jpg
+
+newmtl TardisWindows
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.769451 0.800000 0.362340
+Ks 0.507692 0.507692 0.507692
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tardis-Police-Public-Call-Box-Text.jpg
+
+newmtl Tardis_Black_Sign
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.030769 0.030769 0.030769
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tardis-Police-Public-Call-Box-Text.jpg
+map_Ke Tardis-Police-Public-Call-Box-Text_repeat.jpg
+
+newmtl Tardis_White_Sign
+Ns 235.294118
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.615385 0.615385 0.615385
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tardis-Police-Public-Call-Box-Text.jpg

@@ -14,7 +14,7 @@ import org.sunflow.PluginRegistry;
 import org.sunflow.SunflowAPI;
 import org.sunflow.SunflowAPIInterface;
 import org.sunflow.core.SceneParser;
-import org.sunflow.core.light.ImageBasedLight2;
+//import org.sunflow.core.shader.TestShader;
 import org.sunflow.image.Color;
 import org.sunflow.image.ColorFactory;
 import org.sunflow.image.ColorFactory.ColorSpecificationException;
@@ -610,6 +610,10 @@ public class SCParser implements SceneParser {
         		api.parameter("reflectance", p.getNextFloat());
         	if(p.peekNextToken("attn"))
         		api.parameter("attenuation", p.getNextFloat());
+        	if(p.peekNextToken("tpow"))
+        		api.parameter("tpow", p.getNextFloat());
+        	if(p.peekNextToken("tfoc"))
+        		api.parameter("tfoc", p.getNextFloat());
         	api.shader(name, "sss");
         } else
             UI.printWarning(Module.API, "Unrecognized shader type: %s", p.getNextToken());
@@ -1130,24 +1134,6 @@ public class SCParser implements SceneParser {
             else
                 api.parameter("lowsamples", samples);
             api.light(generateUniqueName("ibl"), "ibl");
-        } else if (p.peekNextToken("ibl2")) {
-            UI.printInfo(Module.API, "Reading image based light 2 ...");
-            p.checkNextToken("image");
-            api.parameter("texture", p.getNextToken());
-            p.checkNextToken("center");
-            api.parameter("center", parseVector());
-            p.checkNextToken("up");
-            api.parameter("up", parseVector());
-            p.checkNextToken("method");
-            api.parameter("method", p.getNextToken());
-            int samples = numLightSamples;
-            if (p.peekNextToken("samples"))
-                samples = p.getNextInt();
-            else
-                UI.printWarning(Module.API, "Samples keyword not found - defaulting to %d", samples);
-            api.parameter("samples", samples);
-            ImageBasedLight2 ibl2 = new ImageBasedLight2();
-            api.light(generateUniqueName("ibl2"), "ibl2");        
         } else if (p.peekNextToken("meshlight")) {
             p.checkNextToken("name");
             String name = p.getNextToken();

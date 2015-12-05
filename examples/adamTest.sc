@@ -28,14 +28,14 @@ light {
 light {
    type point
    color { "sRGB nonlinear" 1.000 1.000 1.000 }
-   power 1000.0
+   power 5000.0
    p 1 5 3
 }
 
 light {
    type point
    color { "sRGB nonlinear" 1.000 1.000 1.000 }
-   power 1000.0
+   power 5000.0
    p 1 5 10
 }
 
@@ -71,12 +71,13 @@ shader {
 }
 
 shader {
-  name SSShader
+  name Skin.shader
   type sss
-  diff 0.25 0.25 0.75
+  diff {"sRGB linear" 0.800000 0.546861 0.475128 }
+  text cassandra_2739206k.jpg
   samp 16
   refl 0
-  attn 0.5
+  attn 1
 }
 
 modifier {
@@ -88,7 +89,7 @@ modifier {
 }
 
 object {
-	shader SSShader
+	shader Skin.shader
 	transform {
 		scale 5 0.25 5
 		translate 0 0 2.5
