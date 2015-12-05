@@ -7,7 +7,6 @@ import org.sunflow.core.Shader;
 import org.sunflow.core.ShadingState;
 import org.sunflow.core.Texture;
 import org.sunflow.core.TextureCache;
-import org.sunflow.core.primitive.TriangleMesh;
 import org.sunflow.image.Color;
 import org.sunflow.math.MathUtils;
 import org.sunflow.math.Point3;
@@ -31,13 +30,13 @@ public class SubsurfaceScatteringShader implements Shader
 	private float attenuation = 10f;
 	
 	// This is a 0-1 value controlling how much of the final color is plain diffuse
-	float percentDiffuse = 0.5f;
+	float percentDiffuse = 0f;
 	
 	// Controls how much light comes through as transparency 
-	private float transparencyPower = 5f;
+	private float transparencyPower = 0f;
 	
 	// Controls how focused the transparency looks
-	private float transparencyFocus = 5f;
+	private float transparencyFocus = 0f;
 	
 	// Values needed for BSSRDF
 	private float eta = 1.3f;
@@ -57,12 +56,14 @@ public class SubsurfaceScatteringShader implements Shader
 	public boolean update(ParameterList pl, SunflowAPI api)
 	{
 		diffuseColor = pl.getColor("color", diffuseColor);
-		 String filename = pl.getString("texture", null);
+		String filename = pl.getString("texture", null);
         if (filename != null)
             tex = TextureCache.getTexture(api.resolveTextureFilename(filename), false);
         samples = pl.getInt("samples", samples);
         refl = pl.getFloat("reflectance", refl);
         attenuation = pl.getFloat("attenuation", attenuation);
+        transparencyPower = pl.getFloat("tpow", transparencyPower);
+        transparencyFocus = pl.getFloat("tfoc", transparencyFocus);
 		return true;
 	}
 	
@@ -73,7 +74,7 @@ public class SubsurfaceScatteringShader implements Shader
 		if(state.getDepth() > 0)
 		{
 			// Diffuse case
-			if(!transparency.get())
+			if(transparency.get() == null || !transparency.get())
 			{
 				// This check prevents samples taken from behind from ending up as black
 				if(!state.checkBehind())
@@ -148,9 +149,12 @@ public class SubsurfaceScatteringShader implements Shader
 						// Give transparency a double helping of scale so it does not dominate scattering
 						percentTransparency *= scale;
 						
-						Color t = state.traceRefraction(sampleRay, i);
-						t.mul(percentTransparency);
-						c.add(t);
+						if(percentTransparency > 0)
+						{
+							Color t = state.traceRefraction(sampleRay, i);
+							t.mul(percentTransparency);
+							c.add(t);
+						}
 					}
 					
 					c.mul(scale);
