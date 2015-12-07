@@ -564,10 +564,14 @@ public class SCParser implements SceneParser {
         } else if (p.peekNextToken("view-global")) {
             api.shader(name, "view_global");
         } else if (p.peekNextToken("constant")) {
-            // backwards compatibility -- peek only
-            p.peekNextToken("color");
-            api.parameter("color", null, parseColor().getRGB());
-            api.shader(name, "constant");
+            String tex = null;
+            if (p.peekNextToken("texture")) {
+                api.parameter("texture", p.getNextToken());
+                api.shader(name, "textured_constant");
+            } else if (p.peekNextToken("color")) {
+            	api.parameter("color", null, parseColor().getRGB());
+                api.shader(name, "constant");
+            }
         } else if (p.peekNextToken("janino")) {
             String typename = p.peekNextToken("typename") ? p.getNextToken() : PluginRegistry.shaderPlugins.generateUniqueName("janino_shader");
             if (!PluginRegistry.shaderPlugins.registerPlugin(typename, p.getNextCodeBlock()))

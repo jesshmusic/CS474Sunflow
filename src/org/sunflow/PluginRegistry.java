@@ -95,6 +95,7 @@ import org.sunflow.core.shader.SubsurfaceScatteringShader;
 //import org.sunflow.core.shader.TestShader;
 import org.sunflow.core.shader.TexturedAmbientOcclusionShader;
 import org.sunflow.core.shader.TexturedDiffuseShader;
+import org.sunflow.core.shader.TexturedConstantShader;
 import org.sunflow.core.shader.TexturedPhongShader;
 import org.sunflow.core.shader.TexturedShinyDiffuseShader;
 import org.sunflow.core.shader.TexturedWardShader;
@@ -193,6 +194,7 @@ public final class PluginRegistry {
         // textured shaders
         shaderPlugins.registerPlugin("textured_ambient_occlusion", TexturedAmbientOcclusionShader.class);
         shaderPlugins.registerPlugin("textured_diffuse", TexturedDiffuseShader.class);
+        shaderPlugins.registerPlugin("textured_constant", TexturedConstantShader.class);
         shaderPlugins.registerPlugin("textured_phong", TexturedPhongShader.class);
         shaderPlugins.registerPlugin("textured_shiny_diffuse", TexturedShinyDiffuseShader.class);
         shaderPlugins.registerPlugin("textured_ward", TexturedWardShader.class);

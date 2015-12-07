@@ -9,4 +9,4 @@ Ks 0.257812 0.257812 0.257812
 Ni 1.000000
 d 0.926653
 illum 2
-map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/Cassandra_UV.jpg
+map_Kd Cassandra_UV.jpg
