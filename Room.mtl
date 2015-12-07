@@ -1,0 +1,110 @@
+# Blender MTL File: 'Cassandra_Scene.blend'
+# Material Count: 11
+
+newmtl Ceiling
+Ns 5.882353
+Ka 0.000000 0.000000 0.000000
+Kd 0.028050 0.026882 0.039316
+Ks 0.180556 0.180556 0.180556
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Floor
+Ns 5.882353
+Ka 0.000000 0.000000 0.000000
+Kd 0.119536 0.119536 0.119536
+Ks 0.326389 0.326389 0.326389
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Floor_RoomTexture.jpg
+Ns 5.882353
+Ka 0.000000 0.000000 0.000000
+Kd 0.119536 0.119536 0.119536
+Ks 0.326389 0.326389 0.326389
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Room-Bright-Light
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.763047 0.495463
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+
+newmtl Room-Bright-Light2
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.329995 0.549729 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+
+newmtl Room-Bright-Light_RoomTexture.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.763047 0.495463
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Sec_Light_Blue
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000706 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Sec_Light_Red
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.001938 0.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Secondary_Light
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.524473 0.573442 0.800000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Stairs_Light
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.737079 0.566059
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg
+
+newmtl Window_Rim
+Ns 17.647059
+Ka 0.000000 0.000000 0.000000
+Kd 0.098559 0.098559 0.098559
+Ks 0.326389 0.326389 0.326389
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/RoomTexture.jpg

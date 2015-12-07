@@ -6,7 +6,7 @@ import org.sunflow.util.FloatArray;
 import org.sunflow.util.IntArray;
 
 public class ImportedOBJ {
-	ArrayList<ImportedModelShader> shaders = new ArrayList<>();
+	ArrayList<String> shaders = new ArrayList<>();
 	String name;
 	ArrayList<String> points = new ArrayList<>();
 	ArrayList<String> triangles = new ArrayList<>();
@@ -30,11 +30,11 @@ public class ImportedOBJ {
 //			for (int i = shaders.size() - 1; i > -1; i--) {
 //				returnString = returnString + "\t  " + shaders.get(i).name + "\n";
 //			}
-			for (ImportedModelShader nextShader: shaders) {
-				returnString = returnString + "\t  " + nextShader.name + "\n";
+			for (String nextShader: shaders) {
+				returnString = returnString + "\t  " + nextShader + "\n";
 			}
 		} else if (!shaders.isEmpty()) {
-			returnString = returnString + "\tshader " + shaders.get(0).name + "\n";
+			returnString = returnString + "\tshader " + shaders.get(0) + "\n";
 		}
 		returnString = returnString + "\ttype generic-mesh\n";
 		returnString = returnString + "\tname " + this.name + "\n";

@@ -130,7 +130,7 @@ public class OBJConverter {
 						currentMaterialNumber = -1;
 					} else {
 						currentObject = new ImportedOBJ(name[1]);
-						currentObject.shaders = parseMaterialFile(currentMaterialFileName);
+						shaders = parseMaterialFile(currentMaterialFileName);
 						currentMaterialNumber = -1;
 					}
 				} else if (line.startsWith("v ")) {
@@ -148,6 +148,7 @@ public class OBJConverter {
 					currentObject.vnZs.add((int)Float.parseFloat(vn[3]));
 				} else if (line.startsWith("usemtl ")) {
 					currentMaterialNumber++;
+					currentObject.shaders.add(shaders.get(currentMaterialNumber).name);
 				} else if (line.startsWith("f ")) {
 					String[] f = line.split("\\s+");
 					currentObject.faceShaders.add(currentMaterialNumber);
@@ -178,16 +179,18 @@ public class OBJConverter {
 					UI.printInfo(Module.GEOM, "OBJ -   * Parsed %7d lines ...", lineNumber);
 				lineNumber++;
 			}
-
+			if (currentObject.shaders.isEmpty()) {
+				currentObject.shaders.add(shaders.get(0).name);
+			}
 			objects.add(currentObject);
 			UI.printInfo(Module.GEOM, "OBJ - Finished reading file, %d objects found ...", objects.size());
 			int numShaders = 0;
-			for (ImportedOBJ nextObject: objects) {
-				for (ImportedModelShader nextShader: nextObject.shaders) {
+//			for (ImportedOBJ nextObject: objects) {
+				for (ImportedModelShader nextShader: shaders) {
 					sceneFileContents = sceneFileContents + nextShader.toString();
 					numShaders++;
 				}
-			} 
+//			} 
 			UI.printInfo(Module.GEOM, "OBJ - %d shaders written to file ...", numShaders);
 			
 			for (ImportedOBJ nextObject: objects) {

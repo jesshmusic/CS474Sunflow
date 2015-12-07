@@ -1,14 +1,14 @@
 image {
-  resolution 640 480
+  resolution 400 300
   aa 0 1
-  samples 8
+  samples 4
   filter mitchell
 }
 
 camera {
   type pinhole
-  eye    -10 30 10
-  target -5 0 10
+  eye    -10 10 10
+  target -10 0 10
   up     0 0 1
   fov    60
   aspect 1.333333
@@ -23,27 +23,20 @@ light {
   turbidity 2
   samples 16
 }
-
-light {
-   type point
-   color { "sRGB nonlinear" 1.000 1.000 1.000 }
-   power 5000.0
-   p -10.0 -30.0 20
-}
 */
 
 light {
    type point
    color { "sRGB nonlinear" 1.000 1.000 1.000 }
    power 5000.0
-   p 0 -3 10
+   p -10.0 -18 15
 }
 
 light {
    type point
    color { "sRGB nonlinear" 1.000 1.000 1.000 }
-   power 5000.0
-   p 0 10 10
+   power 1000.0
+   p 0 0 20
 }
 
 trace-depths {
@@ -76,81 +69,15 @@ shader {
 	diff 0.800000 0.546861 0.475128
 	text Cassandra_UV.jpg
 	samp 16
-	refl 0
+	refl 0.5
 	attn 1.0
 }
-
-/*
-object {
-	shader TestSSS
-	transform {
-		scale 5 0.25 5
-		translate 0 0 2.5
-	}
-	type generic-mesh
-	name cube
-	points 8
-	  -1 -1 1
-	  -1 1 1
-	  -1 -1 -1
-	  -1 1 -1
-	  1 -1 1
-	  1 1 1
-	  1 -1 -1
-	  1 1 -1
-	triangles 12
-	  3 2 0
-	  7 6 2
-	  5 4 6
-	  1 0 4
-	  2 6 4
-	  7 3 1
-	  1 3 0
-	  3 7 2
-	  7 5 6
-	  5 1 4
-	  0 2 4
-	  5 7 1
-	normals facevarying
-	  	-1 0 0 -1 0 0 -1 0 0
-	  	0 0 -1 0 0 -1 0 0 -1
-	  	1 0 0 1 0 0 1 0 0
-	  	0 0 1 0 0 1 0 0 1
-	  	0 -1 0 0 -1 0 0 -1 0
-	  	0 1 0 0 1 0 0 1 0
-	  	-1 0 0 -1 0 0 -1 0 0
-	  	0 0 -1 0 0 -1 0 0 -1
-	  	1 0 0 1 0 0 1 0 0
-	  	0 0 1 0 0 1 0 0 1
-	  	0 -1 0 0 -1 0 0 -1 0
-	  	0 1 0 0 1 0 0 1 0
-	uvs facevarying
-	  	1 0 1 1 0 1
-	  	1 0 1 1 0 1
-	  	1 0 1 1 0 1
-	  	0 0 0 0 1 0
-	  	1 0 1 1 0 1
-	  	1 0 1 1 0 1
-	  	0 0 1 0 0 1
-	  	0 0 1 0 0 1
-	  	0 0 1 0 0 1
-	  	1 0 0 0 1 0
-	  	0 0 1 0 0 1
-	  	0 0 1 0 0 1
-}
-
-shader {
-	name Skin.shader
-	type diffuse
-	texture Cassandra_UV.jpg
-}
-*/
 
 
 object {
 	shader Skin.shader
 	transform {
-		translate 0 0 5.5
+		translate -10 -15 5.5
 	}
 	type generic-mesh
 	name Cassandra_rack_Cylinder
@@ -9695,6 +9622,9 @@ object {
 	  Rack_Metal.shader
 	  Brain_Jar.shader
 	  Rack_Metal_Black.shader
+	transform {
+		translate -10 -15 0
+	}
 	type generic-mesh
 	name Cube_Cube.006
 	points 3084
