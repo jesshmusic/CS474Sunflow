@@ -64,6 +64,7 @@ public class SubsurfaceScatteringShader implements Shader
         attenuation = pl.getFloat("attenuation", attenuation);
         transparencyPower = pl.getFloat("tpow", transparencyPower);
         transparencyFocus = pl.getFloat("tfoc", transparencyFocus);
+        percentDiffuse = pl.getFloat("percentDiffuse", percentDiffuse);
 		return true;
 	}
 	
@@ -83,6 +84,7 @@ public class SubsurfaceScatteringShader implements Shader
 				}
 				
 				state.initLightSamples();
+				// Use irradiance
 				return state.diffuse(getDiffuse(state));
 			}
 			// Transparent case
@@ -132,7 +134,7 @@ public class SubsurfaceScatteringShader implements Shader
 					transparency.set(false);
 					Point3 p = new Point3();
 					Ray sampleRay = new Ray(originPoint, direction);
-					Color c = state.traceRefraction(sampleRay, i, p);
+					Color c =  state.traceRefraction(sampleRay, i, p);
 					Vector3 diff = Point3.sub(p, state.getPoint(), new Vector3());
 					float r = diff.length();
 					float scale = getScale(r);
@@ -152,19 +154,17 @@ public class SubsurfaceScatteringShader implements Shader
 						if(percentTransparency > 0)
 						{
 							Color t = state.traceRefraction(sampleRay, i);
-							t.mul(percentTransparency);
-							c.add(t);
+							c.madd(percentTransparency, t);
 						}
 					}
 					
-					c.mul(scale);
-					rad.add(c);
+					rad.madd(scale, c);
 				}
 			}			
 			
 			// Average out sample contributions
 			rad.mul(1f/(n*n));
-			
+
 			// Compute Fresnel term
 			if (state.includeSpecular())
 			{
@@ -191,6 +191,7 @@ public class SubsurfaceScatteringShader implements Shader
 			}
 			
 			// Take a ratio of the normal diffuse to the SSS color. This helps prevent overall darkening.
+			if(percentDiffuse > 0)
 			{
 				state.initLightSamples();
 				Color c = state.diffuse(getDiffuse(state));
@@ -202,7 +203,8 @@ public class SubsurfaceScatteringShader implements Shader
 				// Take the SSS if it's brighter to get it showing in dark patches
 				rad = Color.max(rad, d);
 			}
-			
+
+			transparency.set(false);
 			return rad;
 		}
 	}

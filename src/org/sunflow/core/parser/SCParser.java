@@ -618,6 +618,8 @@ public class SCParser implements SceneParser {
         		api.parameter("tpow", p.getNextFloat());
         	if(p.peekNextToken("tfoc"))
         		api.parameter("tfoc", p.getNextFloat());
+        	if(p.peekNextToken("percentDiffuse"))
+        		api.parameter("percentDiffuse", p.getNextFloat());
         	api.shader(name, "sss");
         } else
             UI.printWarning(Module.API, "Unrecognized shader type: %s", p.getNextToken());
