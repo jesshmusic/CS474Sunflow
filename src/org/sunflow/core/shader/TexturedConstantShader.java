@@ -9,6 +9,7 @@ import org.sunflow.image.Color;
 
 public class TexturedConstantShader extends ConstantShader {
     private Texture tex;
+    private float brightness = 2.0f;
 
 	public TexturedConstantShader() {
 		tex = null;
@@ -16,6 +17,7 @@ public class TexturedConstantShader extends ConstantShader {
 
     @Override
     public boolean update(ParameterList pl, SunflowAPI api) {
+    	brightness = pl.getFloat("brightness", 2.0f);
         String filename = pl.getString("texture", null);
         if (filename != null)
             tex = TextureCache.getTexture(api.resolveTextureFilename(filename), false);
@@ -25,8 +27,8 @@ public class TexturedConstantShader extends ConstantShader {
     @Override
     public Color getRadiance(ShadingState state) {
     	Color c = tex.getPixel(state.getUV().x, state.getUV().y);
-//    	float rgb[] = c.getRGB();
-//    	c.set(rgb[0] * 2.0f, rgb[1] * 2.0f, rgb[2] * 2.0f);
+    	float rgb[] = c.getRGB();
+    	c.set(rgb[0] * brightness, rgb[1] * brightness, rgb[2] * brightness);
         return c;
     }
 

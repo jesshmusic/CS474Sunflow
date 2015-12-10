@@ -10,3 +10,5 @@ Ni 1.000000
 d 0.926653
 illum 2
 map_Kd Cassandra_UV.jpg
+map_Bump Cassandra_Alpha.jpg
+map_Tr Cassandra_Alpha.jpg
