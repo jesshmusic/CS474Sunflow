@@ -21,6 +21,7 @@ public class SubsurfaceScatteringShader implements Shader
 {
 	private Color diffuseColor = Color.white();
 	private Texture tex;
+	private Texture alphaMap;
 	private int samples = 16;
 	
 	// How reflective the surface is
@@ -36,7 +37,7 @@ public class SubsurfaceScatteringShader implements Shader
 	private float transparencyPower = 0f;
 	
 	// Controls how focused the transparency looks
-	private float transparencyFocus = 0f;
+	private float transparencyFocus = 5f;
 	
 	// Values needed for BSSRDF
 	private float eta = 1.3f;
@@ -59,6 +60,9 @@ public class SubsurfaceScatteringShader implements Shader
 		String filename = pl.getString("texture", null);
         if (filename != null)
             tex = TextureCache.getTexture(api.resolveTextureFilename(filename), false);
+        filename = pl.getString("alphaMap", null);
+        if(filename != null)
+        	alphaMap = TextureCache.getTexture(api.resolveTextureFilename(filename), false);
         samples = pl.getInt("samples", samples);
         refl = pl.getFloat("reflectance", refl);
         attenuation = pl.getFloat("attenuation", attenuation);
@@ -134,7 +138,7 @@ public class SubsurfaceScatteringShader implements Shader
 					transparency.set(false);
 					Point3 p = new Point3();
 					Ray sampleRay = new Ray(originPoint, direction);
-					Color c =  state.traceRefraction(sampleRay, i, p);
+					Color c = state.traceRefraction(sampleRay, i, p);
 					Vector3 diff = Point3.sub(p, state.getPoint(), new Vector3());
 					float r = diff.length();
 					float scale = getScale(r);
@@ -146,7 +150,8 @@ public class SubsurfaceScatteringShader implements Shader
 						Vector3 rayDir = state.getRay().getDirection();
 						float dot = Vector3.dot(direction, rayDir) / (rayDir.length()*direction.length());
 						float percentTransparency = MathUtils.clamp(dot, 0, 1);
-						percentTransparency = (float)Math.pow(percentTransparency, transparencyFocus) * transparencyPower;
+						float alphaMapValue = (alphaMap != null) ? alphaMap.getPixel(state.getUV().x, state.getUV().y).getAverage() : 1f;
+						percentTransparency = (float)Math.pow(percentTransparency, transparencyFocus) * alphaMapValue * transparencyPower;
 						
 						// Give transparency a double helping of scale so it does not dominate scattering
 						percentTransparency *= scale;

@@ -613,6 +613,8 @@ public class SCParser implements SceneParser {
         		api.parameter("color", null, parseColor().getRGB());
         	if(p.peekNextToken("text"))
         		api.parameter("texture", p.getNextToken());
+        	if(p.peekNextToken("alphaMap"))
+        		api.parameter("alphaMap", p.getNextToken());
         	if(p.peekNextToken("samp"))
         		api.parameter("samples", p.getNextInt());
         	if(p.peekNextToken("refl"))
