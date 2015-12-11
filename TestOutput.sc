@@ -1,5 +1,5 @@
 image {
-  resolution 400 300
+  resolution 640 480
   aa 0 2
   samples 1
   filter mitchell
@@ -8,9 +8,9 @@ image {
 camera {
   type pinhole
   eye    0 20 25
-  target -7 0 20
+  target 0 0 20
   up     0 0 1
-  fov    30
+  fov    120
   aspect 1.333333
 }
 
@@ -23,7 +23,7 @@ trace-depths {
 
 gi {
   type path
-  samples 64
+  samples 128
 }
 
 /*
@@ -39,7 +39,7 @@ light {
 include Room.sc
 include WindowBackground.sc
 /*include Tardis.sc*/
-include Cassandra.sc
+/*include Cassandra.sc*/
 include Cassandra_Rack.sc
 
 
