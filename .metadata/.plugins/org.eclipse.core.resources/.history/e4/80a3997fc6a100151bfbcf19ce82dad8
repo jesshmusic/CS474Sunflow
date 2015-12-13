@@ -1,0 +1,14 @@
+# Blender MTL File: 'Cassandra_Scene.blend'
+# Material Count: 1
+
+newmtl Skin
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.546861 0.475128
+Ks 0.257812 0.257812 0.257812
+Ni 1.000000
+d 0.926653
+illum 2
+map_Kd Cassandra_UV.jpg
+map_Bump Cassandra_Alpha.jpg
+map_Tr Cassandra_Alpha.jpg

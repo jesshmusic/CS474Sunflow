@@ -1,0 +1,78 @@
+image {
+  resolution 640 480
+  aa 0 2
+  samples 4
+  filter gaussian
+}
+
+camera {
+  type thinlens
+  eye    10 35 15
+  target -10 -35 15
+  up     0 0 1
+  fov    30
+  aspect 1.333333
+  fdist  60
+  lensr  0.2
+}
+/*
+camera {
+  type pinhole
+  eye    0 20 5
+  target -13 -40 15
+  up     0 0 1
+  fov    35
+  aspect 1.333333
+}
+*/
+
+trace-depths {
+  diff 8
+  refl 8
+  refr 8
+}
+
+
+light {
+   type point
+   color { "sRGB nonlinear" 1.000 1.000 1.000 }
+   power 1000.0
+   p -8 -38 10
+}
+
+light {
+   type point
+   color { "sRGB nonlinear" 1.000 1.000 1.000 }
+   power 1000.0
+   p 0 0 20
+}
+
+light {
+  type ibl
+  image RoomHDR.hdr
+  center 0 -1 0
+  up 0 0 1
+  lock true
+  samples 200
+}
+
+shader {
+  name default-shader
+  type diffuse
+  diff 0.25 0.25 0.25
+}
+
+object {
+  shader default-shader
+  type plane
+  p 0 0 0
+  n 0 0 1
+}
+
+include Tardis.sc
+include Cassandra.sc
+include Cassandra_Rack.sc
+
+
+
+
