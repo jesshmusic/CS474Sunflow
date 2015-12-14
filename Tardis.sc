@@ -41,7 +41,7 @@ object {
 	  TardisWindows.shader
 	  Light.shader
 	transform {
-		translate -5 -20 0
+		translate -9 -50 0
 	}
 	type generic-mesh
 	name TARDIS_Cube.005

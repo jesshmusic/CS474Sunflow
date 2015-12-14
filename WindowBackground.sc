@@ -5,7 +5,7 @@ shader {
 	name Starry_Sky.shader
 	type constant
 	texture PlanetAndStars.jpg
-	brightness 1.5
+	brightness 1.0
 }
 
 /* OBJECTS (These are very very very very long) */

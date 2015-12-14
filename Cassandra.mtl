@@ -1,5 +1,41 @@
 # Blender MTL File: 'Cassandra_Scene.blend'
-# Material Count: 1
+# Material Count: 5
+
+newmtl BrainMat
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.527710 0.536909
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Brain_Jar
+Ns 7.843137
+Ka 0.000000 0.000000 0.000000
+Kd 0.001578 0.373320 0.640000
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 0.370629
+illum 2
+
+newmtl Rack_Metal
+Ns 11.764706
+Ka 0.128501 0.128501 0.128501
+Kd 0.247001 0.247001 0.247001
+Ks 0.717516 0.717516 0.717516
+Ni 1.000000
+d 1.000000
+illum 3
+
+newmtl Rack_Metal_Black
+Ns 31.372549
+Ka 0.180556 0.180556 0.180556
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 3
 
 newmtl Skin
 Ns 96.078431
@@ -9,6 +45,6 @@ Ks 0.257812 0.257812 0.257812
 Ni 1.000000
 d 0.926653
 illum 2
-map_Kd Cassandra_UV.jpg
-map_Bump Cassandra_Alpha.jpg
-map_Tr Cassandra_Alpha.jpg
+map_Kd /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/Image Files/CassandraUV.jpg
+map_Bump /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/Cassandra_Alpha.jpg
+map_Tr /Users/jesshendricks/Dropbox/2015 UMass/Fall 2015/CS-474 Image Synthesis/Final Project/Cassandra_Alpha.jpg

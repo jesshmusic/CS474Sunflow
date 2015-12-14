@@ -1,11 +1,3 @@
-
-shader {
-	name Ceiling_Lights.shader
-	type constant
-	texture RoomTexture.jpg
-	brightness 0.0
-}
-
 shader {
 	name Floors_and_Walls.shader
 	type diffuse
@@ -13,24 +5,31 @@ shader {
 }
 
 shader {
+	name Ceiling_Lights.shader
+	type constant
+	texture RoomTexture.jpg
+	brightness 1.0
+}
+
+shader {
 	name Front_Lights.shader
 	type constant
 	texture RoomTexture.jpg
-	brightness 500.0
+	brightness 100.0
 }
 
 shader {
 	name Left_Lights.shader
 	type constant
 	texture RoomTexture.jpg
-	brightness 0.0
+	brightness 1.0
 }
 
 shader {
 	name Right_Lights.shader
 	type constant
 	texture RoomTexture.jpg
-	brightness 0.0
+	brightness 1.0
 }
 
 object {
