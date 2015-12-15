@@ -5,35 +5,6 @@
 	  Light.shader
 */
 
-
-/* Tardis Shaders */
-
-shader {
-	name Light.shader
-	type constant
-	texture "web_TARDIS_DIFF.jpg"
-	brightness 1.0
-}
-
-shader {
-	name TardisBlue.shader
-	type diffuse
-	texture "web_TARDIS_DIFF.jpg"
-}
-
-shader {
-	name TardisBlue_web_TARDIS_DIFF.jpg.shader
-	type diffuse
-	texture "web_TARDIS_DIFF.jpg"
-}
-
-shader {
-	name TardisWindows.shader
-	type constant
-	texture "web_TARDIS_DIFF.jpg"
-	brightness 3.0
-}
-
 object {
 	shaders 4
 	  TardisBlue.shader

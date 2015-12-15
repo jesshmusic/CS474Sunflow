@@ -1,38 +1,4 @@
 
-
-shader {
-	name Light.shader
-	type constant
-	texture "web_TARDIS_DIFF.jpg"
-	brightness 10.0
-}
-
-shader {
-	name TardisBlue.shader
-	type diffuse
-	texture "web_TARDIS_DIFF.jpg"
-}
-
-shader {
-	name TardisBlue_web_TARDIS_DIFF.jpg.shader
-	type diffuse
-	texture "web_TARDIS_DIFF.jpg"
-}
-
-shader {
-	name TardisWindows.shader
-	type constant
-	texture "web_TARDIS_DIFF.jpg"
-	brightness 5.0
-}
-
-shader {
-	name TardisPolicBoxSign.shader
-	type constant
-	texture "web_TARDIS_DIFF.jpg"
-	brightness 3.0
-}
-
 object {
 	shaders 5
 	  TardisBlue.shader
@@ -41,6 +7,7 @@ object {
 	  Light.shader
 	  TardisWindows.shader
 	transform {
+		rotatey 180
 		rotatex 90
 		translate -9 -50 0
 	}

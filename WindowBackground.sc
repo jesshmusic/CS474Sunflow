@@ -1,12 +1,4 @@
 
-/* Window background shader */ 
-
-shader {
-	name Starry_Sky.shader
-	type constant
-	texture PlanetAndStars.jpg
-	brightness 3.0
-}
 
 /* OBJECTS (These are very very very very long) */
 
