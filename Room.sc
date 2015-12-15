@@ -15,7 +15,7 @@ shader {
 	name Front_Lights.shader
 	type constant
 	texture RoomTexture.jpg
-	brightness 100.0
+	brightness 1.0
 }
 
 shader {

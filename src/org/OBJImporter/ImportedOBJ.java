@@ -3,7 +3,6 @@ package org.OBJImporter;
 import java.util.ArrayList;
 
 import org.sunflow.util.FloatArray;
-import org.sunflow.util.IntArray;
 
 public class ImportedOBJ {
 	ArrayList<String> shaders = new ArrayList<>();

@@ -1,8 +1,9 @@
 image {
-  resolution 640 360
-  aa 0 2
-  samples 4
+  resolution 640 480
+  aa 0 1
+  samples 8
   filter gaussian
+  jitter true
 }
 
 camera {
@@ -10,56 +11,29 @@ camera {
   eye    10 20 25
   target -10 -25 15
   up     0 0 1
-  fov    55
-  aspect 1.7777778
+  fov    45
+  aspect 1.3333333
   fdist  60
-  lensr  0.4
+  lensr  0.5
   sides 6
   rotation 36.0
 }
-/*
-camera {
-  type pinhole
-  eye    0 20 5
-  target -13 -40 15
-  up     0 0 1
-  fov    35
-  aspect 1.333333
-}
-*/
 
 trace-depths {
-  diff 1
-  refl 12
-  refr 12
+  diff 2
+  refl 4
+  refr 4
 }
 
-gi {
-	type irr-cache
-	samples 512
-	tolerance 0.01
-	spacing 0.05 5.0
-}
-
-/*
 gi {
   type path
-  samples 16
+  samples 32
 }
-
-light {
-   type point
-   color { "sRGB nonlinear" 1.000 1.000 1.000 }
-   power 5000.0
-   p -19 -42 15
-}
-*/
-
 
 include Room.sc
 include WindowBackground.sc
-include Tardis.sc
-include Cassandra_FULL_new.sc
+include Tardis_FINAL.sc
+include Cassandra_FINAL.sc
 
 
 
