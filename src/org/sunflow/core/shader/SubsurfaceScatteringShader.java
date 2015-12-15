@@ -78,28 +78,27 @@ public class SubsurfaceScatteringShader implements Shader
 		// Base case, return diffuse or transparency
 		if(state.getDepth() > 0)
 		{
+			// This check prevents samples taken from behind from ending up as black
+			if(!state.checkBehind())
+			{
+				state.faceforward();
+			}
+			else
+			{	
+				state.offsetPoint();
+			}
+			
 			// Diffuse case
 			if(transparency.get() == null || !transparency.get())
 			{
-				// This check prevents samples taken from behind from ending up as black
-				if(!state.checkBehind())
-				{
-					state.faceforward();
-				}
-				
 				state.initLightSamples();
 				// Use irradiance
-				return state.diffuse(getDiffuse(state));
+				return state.getIrradiance(getDiffuse(state));
+				// return state.diffuse(getDiffuse(state));
 			}
 			// Transparent case
 			else
-			{				
-				// This check prevents samples taken from behind from ending up as black
-				if(!state.checkBehind())
-				{
-					state.faceforward();
-				}
-				
+			{
 				Ray r = new Ray(state.getPoint(), state.getRay().getDirection());
 				Color c = state.traceReflection(r, 0); 
 				return c;
@@ -118,6 +117,7 @@ public class SubsurfaceScatteringShader implements Shader
 			
 			// Sample all directions and weight returned color by distance
 			Color rad = Color.black();
+			
 			int n = (int)Math.ceil(Math.sqrt(samples));
 			for(int i=0; i<n; i++)
 			{
@@ -143,33 +143,27 @@ public class SubsurfaceScatteringShader implements Shader
 					float r = diff.length();
 					float scale = getScale(r);
 					
-					// Add in transparency term
-					if(transparencyPower > 0)
-					{
-						transparency.set(true);
-						Vector3 rayDir = state.getRay().getDirection();
-						float dot = Vector3.dot(direction, rayDir) / (rayDir.length()*direction.length());
-						float percentTransparency = MathUtils.clamp(dot, 0, 1);
-						float alphaMapValue = (alphaMap != null) ? alphaMap.getPixel(state.getUV().x, state.getUV().y).getAverage() : 1f;
-						percentTransparency = (float)Math.pow(percentTransparency, transparencyFocus) * alphaMapValue * transparencyPower;
-						
-						// Give transparency a double helping of scale so it does not dominate scattering
-						percentTransparency *= scale;
-						
-						if(percentTransparency > 0)
-						{
-							Color t = state.traceRefraction(sampleRay, i);
-							c.madd(percentTransparency, t);
-						}
-					}
-					
 					rad.madd(scale, c);
 				}
-			}			
+			}		
 			
 			// Average out sample contributions
 			rad.mul(1f/(n*n));
+			rad.mul(getDiffuse(state));
+			
+			
+			// Direct sampling for transparency
+			{
+				transparency.set(true);
+				Ray sampleRay = new Ray(originPoint, state.getRay().getDirection());
+				Color c = state.traceRefraction(sampleRay, 0);
+				float alphaMapValue = (alphaMap != null) ? alphaMap.getPixel(state.getUV().x, state.getUV().y).getAverage() : 0f;
+				float percentTransparent = MathUtils.clamp(alphaMapValue * transparencyPower, 0, 1);
+				rad.mul(1 - percentTransparent);
+				rad.madd(percentTransparent, c);
+			}
 
+			
 			// Compute Fresnel term
 			if (state.includeSpecular())
 			{
@@ -208,6 +202,7 @@ public class SubsurfaceScatteringShader implements Shader
 				// Take the SSS if it's brighter to get it showing in dark patches
 				rad = Color.max(rad, d);
 			}
+			
 
 			transparency.set(false);
 			return rad;

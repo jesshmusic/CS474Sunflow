@@ -206,6 +206,21 @@ public final class ShadingState implements Iterable<LightSample> {
     	return behind;
     }
     
+    public void offsetPoint()
+    {
+    	// offset the shaded point away from the surface to prevent
+        // self-intersection errors
+        if (Math.abs(ng.x) > Math.abs(ng.y) && Math.abs(ng.x) > Math.abs(ng.z))
+            bias = Math.max(bias, 25 * Math.ulp(Math.abs(p.x)));
+        else if (Math.abs(ng.y) > Math.abs(ng.z))
+            bias = Math.max(bias, 25 * Math.ulp(Math.abs(p.y)));
+        else
+            bias = Math.max(bias, 25 * Math.ulp(Math.abs(p.z)));
+        p.x += bias * ng.x;
+        p.y += bias * ng.y;
+        p.z += bias * ng.z;
+    }
+    
     /**
      * Get x coordinate of the pixel being shaded.
      * 
