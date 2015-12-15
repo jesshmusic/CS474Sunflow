@@ -1,5 +1,7 @@
+/* Plain diffuse Cassandra */
+
 image {
-  resolution 1280 720
+  resolution 640 720
   aa 0 2
   samples 8
   filter mitchell
@@ -10,16 +12,16 @@ camera {
   eye    -18 10 5
   target -15 -25 10
   up     0 0 1
-  fov    45
-  aspect 1.7777778
+  fov    35
+  aspect 0.8888888889
   fdist  36
   lensr  0.2
 }
 
 trace-depths {
   diff 1
-  refl 4
-  refr 4
+  refl 2
+  refr 2
 }
 
 gi {
@@ -40,7 +42,7 @@ shader {
 	samp 16
 	refl 0.0
 	attn 0.25
-	tpow 0.1
+	tpow 0.05
 	tfoc 0.1
 	percentDiffuse 0
 }

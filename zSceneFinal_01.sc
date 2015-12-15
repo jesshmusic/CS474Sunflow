@@ -1,22 +1,19 @@
 image {
-  resolution 640 480
-  aa 0 0
+  resolution 1280 720
+  aa 0 2
   samples 8
-  filter gaussian
-  jitter true
+  filter mitchell
 }
 
 camera {
   type thinlens
-  eye    10 20 25
-  target -10 -25 15
+  eye    10 20 35
+  target -10 -25 22
   up     0 0 1
   fov    45
-  aspect 1.3333333
+  aspect 1.7777778
   fdist  60
   lensr  0.5
-  sides 6
-  rotation 36.0
 }
 
 trace-depths {
@@ -26,8 +23,10 @@ trace-depths {
 }
 
 gi {
-  type path
-  samples 32
+	type irr-cache 
+	samples 512 
+	tolerance 0.01 
+	spacing 0.05 5.0
 }
 
 /* Cassandra Shaders */

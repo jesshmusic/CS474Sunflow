@@ -7,17 +7,17 @@ image {
 
 camera {
   type thinlens
-  eye    -18 10 5
-  target -15 -25 10
+  eye    25 25 15
+  target -12 -25 10
   up     0 0 1
-  fov    45
+  fov    60
   aspect 1.7777778
-  fdist  36
+  fdist  66
   lensr  0.2
 }
 
 trace-depths {
-  diff 1
+  diff 4
   refl 4
   refr 4
 }
@@ -40,7 +40,7 @@ shader {
 	samp 16
 	refl 0.0
 	attn 0.25
-	tpow 0.1
+	tpow 0.01
 	tfoc 0.1
 	percentDiffuse 0
 }
@@ -93,14 +93,14 @@ shader {
 	name Ceiling_Lights.shader
 	type constant
 	texture RoomTexture.jpg
-	brightness 25.0
+	brightness 0.2
 }
 
 shader {
 	name Front_Lights.shader
 	type constant
 	texture RoomTexture.jpg
-	brightness 50.0
+	brightness 100.0
 }
 
 shader {
