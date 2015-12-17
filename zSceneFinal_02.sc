@@ -1,7 +1,7 @@
 image {
   resolution 1280 720
-  aa 0 2
-  samples 8
+  aa 1 2
+  samples 16
   filter mitchell
 }
 
@@ -12,12 +12,12 @@ camera {
   up     0 0 1
   fov    45
   aspect 1.7777778
-  fdist  36
-  lensr  0.2
+  fdist  37
+  lensr  0.1
 }
 
 trace-depths {
-  diff 1
+  diff 2
   refl 4
   refr 4
 }
@@ -25,7 +25,7 @@ trace-depths {
 gi {
 	type irr-cache 
 	samples 512 
-	tolerance 0.01 
+	tolerance 0.001 
 	spacing 0.05 5.0
 }
 
@@ -37,10 +37,10 @@ shader {
     diff {"sRGB linear" 0.800000 0.25 0.25 }
 	text CassandraUV_Contrasted.png
 	alphaMap Cassandra_Alpha.png
-	samp 16
+	samp 32
 	refl 0.0
 	attn 0.25
-	tpow 0.1
+	tpow 0.15
 	tfoc 0.1
 	percentDiffuse 0
 }
@@ -136,7 +136,7 @@ shader {
 	name Light.shader
 	type constant
 	texture "web_TARDIS_DIFF.jpg"
-	brightness 10.0
+	brightness 2.0
 }
 
 shader {
@@ -155,14 +155,14 @@ shader {
 	name TardisWindows.shader
 	type constant
 	texture "web_TARDIS_DIFF.jpg"
-	brightness 5.0
+	brightness 2.0
 }
 
 shader {
 	name TardisPolicBoxSign.shader
 	type constant
 	texture "web_TARDIS_DIFF.jpg"
-	brightness 3.0
+	brightness 2.0
 }
 
 

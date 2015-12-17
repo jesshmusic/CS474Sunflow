@@ -25,7 +25,7 @@ trace-depths {
 gi {
 	type irr-cache 
 	samples 512 
-	tolerance 0.01 
+	tolerance 0.001 
 	spacing 0.05 5.0
 }
 
